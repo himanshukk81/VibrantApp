@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild,ElementRef } from '@angular/core';
 import { Nav, Platform,AlertController,NavController,NavParams} from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -14,6 +14,7 @@ import { Network } from '@ionic-native/network';
 import { LocalNotifications } from '@ionic-native/local-notifications';
 import {Http, Response,RequestOptions,Headers} from '@angular/http';
 import { Camera, CameraOptions } from '@ionic-native/camera';
+import { UsersPage } from '../pages/users/users';
 
 @Component({
   templateUrl: 'app.html'
@@ -35,6 +36,8 @@ export class MyApp {
     this.pages = [
       { title: 'Home', component: HomePage},
       {title:'Share Photo',component:HomePage},
+      {title:'Users',component:UsersPage},
+      {title:'Profile',component:profile},
       {title:'Logout',component:LoginPage},
 
     ];
@@ -130,13 +133,13 @@ export class MyApp {
   //   this.fcm.unsubscribeFromTopic('Notification');
   // }
   openPage(page) {
-      if(page.title="Logout")
+      if(page.title=="Logout")
       {
         this.presentConfirm();
       }
       else
       {
-        this.nav.setRoot(HomePage);
+        this.nav.setRoot(page.component);
       }
   }
   presentConfirm()

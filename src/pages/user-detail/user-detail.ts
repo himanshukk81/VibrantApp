@@ -1,6 +1,5 @@
 import { Component,ViewChild } from '@angular/core';
 import { IonicPage, NavController, NavParams,Content,TextInput } from 'ionic-angular';
-
 import { SessionService } from '../../app/sessionservice';
 
 /**
@@ -21,7 +20,34 @@ import { SessionService } from '../../app/sessionservice';
 
 
 export class UserDetailPage {
- 
+  @ViewChild(Content) content: Content;
+  @ViewChild('chat_input') messageInput: TextInput;
+  userInfo:any;
+  messageInfo:any={};
+  messages:any=[];
+  constructor(public navCtrl: NavController,public service:SessionService) 
+  {
+    this.userInfo=this.service.getOtherUserInfo();
+  }
 
+
+  onFocus() {
+    this.content.resize();
+    this.scrollToBottom();
+  }
+
+  scrollToBottom() {
+    setTimeout(() => {
+        if (this.content.scrollToBottom) {
+            this.content.scrollToBottom();
+        }
+    }, 400)
+  }
+
+  sendMessage()
+  {
+    this.messages.push({"editorMsg":this.messageInfo.editorMsg});
+    this.messageInfo.editorMsg='';
+  }
 
 }

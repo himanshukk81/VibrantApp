@@ -35,7 +35,7 @@ export class profile {
       // alert("user info=="+this.service.getUser());
 
       var user=this.service.getUser();
-      this.user=user[0];
+      this.user=user;
       // alert("user=="+JSON.stringify(this.user));
     }
 

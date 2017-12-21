@@ -1,5 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { ErrorHandler, NgModule } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
@@ -17,6 +18,7 @@ import { ListPage} from '../pages/list/list';
 import { UsersPage} from '../pages/users/users';
 import { profile} from '../pages/profile/profile';
 import { UserDetailPage} from '../pages/user-detail/user-detail';
+import { RegisterUser } from '../pages/Login/Login';
 
 import { SocialSharing } from '@ionic-native/social-sharing';
 import { Network } from '@ionic-native/network';
@@ -30,7 +32,8 @@ import { Camera, CameraOptions } from '@ionic-native/camera';
     UserDetailPage,
     UsersPage,
     ListPage,
-    profile
+    profile,
+    RegisterUser
   ],
   imports: [
     HttpModule,
@@ -47,7 +50,8 @@ import { Camera, CameraOptions } from '@ionic-native/camera';
     UserDetailPage,
     UsersPage,
     ListPage,
-    profile
+    profile,
+    RegisterUser
   ],
   providers: [
     StatusBar,

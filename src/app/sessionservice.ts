@@ -108,7 +108,7 @@ export class SessionService {
     {
       this.user=userInfo;
        
-      this.showToast("set user=====");
+    //   this.showToast("set user=====");
        this.nativeStorage.setItem('userInfo',userInfo)
         .then(
             () =>
