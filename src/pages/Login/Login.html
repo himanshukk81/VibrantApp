@@ -19,12 +19,13 @@
   </ion-list>
 
   <div padding>
-    <button ion-button block (click)="login()">Sign In</button>
+    <button ion-button block (click)="login()" >Sign In</button>
   </div>
 
 
   <div text-center>
-    <button ion-button round outline (click)="signUp()">New User?</button>
+    <button ion-button round outline (click)="signUp()" [disabled]="loader">New User?</button>
+    <button ion-button round outline (click)="guestLogin()">Guest</button>
   </div>
   
   <div text-center *ngIf="loader">

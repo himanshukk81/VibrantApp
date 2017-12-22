@@ -16,6 +16,12 @@ import {Http, Response,RequestOptions,Headers} from '@angular/http';
 import { Camera, CameraOptions } from '@ionic-native/camera';
 import { UsersPage } from '../pages/users/users';
 
+// import { FirebaseAuth } from '@firebase/auth-types';
+// import { FirebaseDatabase } from '@firebase/database-types';
+// import { FirebaseMessaging } from '@firebase/messaging-types';
+// import { FirebaseStorage } from '@firebase/storage-types';
+// import { FirebaseFirestore } from '@firebase/firestore-types';
+
 @Component({
   templateUrl: 'app.html'
 })
@@ -30,7 +36,7 @@ export class MyApp {
 
   constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen,public service:SessionService,public native:NativeStorage,public sharing:SocialSharing,public alertCtrl:AlertController  
     ,public nativeStorage:NativeStorage,public network:Network,public localNotifications:LocalNotifications,public http:Http) {
-      this.initializeApp();
+      // this.initializeApp();
     // this.enableLocation();  
     // used for an example of ngFor and navigation
     this.pages = [

@@ -33,13 +33,13 @@
 
       <ion-item>
         <ion-label>Password</ion-label>
-        <ion-input type="text" [(ngModel)]="user.password"></ion-input>
+        <ion-input type="password" [(ngModel)]="user.password"></ion-input>
       </ion-item>
 
       <ion-item>
         <ion-label>Confirm Password</ion-label>
-        <ion-input type="text" [(ngModel)]="user.confirmPassword" ></ion-input>
+        <ion-input type="password" [(ngModel)]="user.confirmPassword" ></ion-input>
       </ion-item>
-      <button ion-button type="submit" block (click)="saveUser()">Add User</button>
+      <button ion-button type="submit" block (click)="saveUser()" [disabled]="loader" >Add User <ion-spinner name="circles" *ngIf="loader"></ion-spinner></button>
     
 </ion-content>

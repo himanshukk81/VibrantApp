@@ -3,6 +3,7 @@ import {Http, Response,RequestOptions,Request, RequestMethod,Headers,URLSearchPa
 import {Events,ToastController } from 'ionic-angular';
 import { NativeStorage } from '@ionic-native/native-storage';
 import { Toast } from '@ionic-native/toast';
+import { AngularFireDatabase, FirebaseListObservable} from 'angularfire2/database-deprecated';
 declare var google:any;
 declare var navigator: any;
 @Injectable()
@@ -20,7 +21,8 @@ export class SessionService {
     userTypeData:any;
     userInfo:any;
     otherUserInfo:any;
-    constructor(public http:Http,public events:Events,public toastCtrl:ToastController,public nativeStorage:NativeStorage,public toast:Toast){
+    budgetInfo:any;
+    constructor(public db: AngularFireDatabase,public http:Http,public events:Events,public toastCtrl:ToastController,public nativeStorage:NativeStorage,public toast:Toast){
     }
 
     
@@ -33,7 +35,6 @@ export class SessionService {
     {
         return this.token;
     }
-
      showToast2(message)
     {
         let toast = this.toastCtrl.create({
@@ -47,8 +48,6 @@ export class SessionService {
         });
         toast.present();
     }
-
-
      showToast(message)
     {
        this.toast.show(message, '7000', 'center').subscribe(
@@ -57,11 +56,6 @@ export class SessionService {
           }
         );
     }
-
-
-   
-
-
     setUserLocation(userLocation)
     {
         this.nativeStorage.setItem('userLocation',userLocation)
@@ -78,7 +72,6 @@ export class SessionService {
         );
         this.userInfo=userLocation;
     }
-
      getUserLocation()
     {
         // alert("getting location");
@@ -101,26 +94,22 @@ export class SessionService {
             return this.userInfo;
         },1000)
         
-    }
-
-    
+    }  
     setUser(userInfo)
     {
-      this.user=userInfo;
-       
-    //   this.showToast("set user=====");
-       this.nativeStorage.setItem('userInfo',userInfo)
-        .then(
-            () =>
-                {
-                 var message="stored";
-                 this.showToast("stored user type")
-                },
-            error =>{
-                var message="stored error user type="+error;
-                 this.showToast(message)
-            } 
-        );   
+       this.user=userInfo;
+    //    this.nativeStorage.setItem('userInfo',userInfo)
+    //     .then(
+    //         () =>
+    //             {
+    //              var message="stored";
+    //              this.showToast("stored user type")
+    //             },
+    //         error =>{
+    //             var message="stored error user type="+error;
+    //              this.showToast(message)
+    //         } 
+    //     );   
     }
 
     getUser()
@@ -136,6 +125,46 @@ export class SessionService {
     getOtherUserInfo()
     {
         return this.otherUserInfo;
+    }
+
+    verifyUser(email,type)
+    {
+        var loginType=type;
+        var item=this.db.list('/user_detail',{
+                query:{
+                    orderByChild:'email',
+                    equalTo:email,       
+                },
+            }).subscribe(snapshot => {
+                if(loginType==1)
+                {
+
+                    
+                    this.events.publish('Verification:Success:signup',snapshot); 
+                }
+                else
+                {
+                    this.events.publish('Verification:Success:login',snapshot); 
+                }
+                
+                
+            },error=>{
+                // this.events.publish('Verification:Error',snapshot); 
+                
+                this.showToast2("Something went wrong please try again");
+                return;
+            })
+    
+              // return item;
+        
+    }
+    setBudget(budget)
+    {
+        this.budgetInfo=budget;
+    }
+    getBudget()
+    {
+      return this.budgetInfo;
     }
 }
 
