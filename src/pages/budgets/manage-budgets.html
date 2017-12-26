@@ -23,8 +23,9 @@
     </ion-item>
   
     <ion-item>
-      <ion-label></ion-label>
+      <ion-label>Amount</ion-label>
       <ion-input type="number" [(ngModel)]="budget.amount"></ion-input>
     </ion-item>  
-    <button ion-button type="submit" block (click)="addBudget()" [disabled]="loader" >Add Budget <ion-spinner name="circles" *ngIf="loader"></ion-spinner></button>
+    <button ion-button type="submit" block (click)="saveBudgetInfo()" [disabled]="loader" *ngIf="!update">Add Budget <ion-spinner name="circles" *ngIf="loader"></ion-spinner></button>
+    <button ion-button type="submit" block (click)="updateBudget()" [disabled]="loader" *ngIf="update">Update Budget <ion-spinner name="circles" *ngIf="loader"></ion-spinner></button>
 </ion-content>

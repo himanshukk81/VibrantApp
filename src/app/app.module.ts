@@ -11,7 +11,6 @@ import { HttpModule }    from '@angular/http';
 import { SessionService } from './sessionservice';
 import { LoginPage } from '../pages/Login/Login';
 import { NativeStorage } from '@ionic-native/native-storage';
-import { LocalNotifications } from '@ionic-native/local-notifications';
 import { Toast } from '@ionic-native/toast';
 import { environment } from '../environments/environment';
 import { ListPage} from '../pages/list/list';
@@ -25,12 +24,13 @@ import { Camera, CameraOptions } from '@ionic-native/camera';
 import { AngularFireDatabase, FirebaseListObservable,AngularFireDatabaseModule} from 'angularfire2/database-deprecated';
 import { AngularFireModule } from 'angularfire2';
 import { BudgetsPage} from '../pages/budgets/budgets';
-import { ManageBudgetsPage} from '../pages/manage-budgets/manage-budgets';
+import { ManageBudgetsPage} from '../pages/budgets/budgets';
 import { FunctionsPage} from '../pages/functions/functions';
-import { ManageFunctionsPage} from '../pages/manage-functions/manage-functions';
+import { ManageFunctionsPage} from '../pages/functions/functions';
 import { RemindersPage} from '../pages/reminders/reminders';
-import { ManageRemindersPage} from '../pages/manage-reminders/manage-reminders';
+import { ManageRemindersPage} from '../pages/reminders/reminders';
 import { SharePhotoPage} from '../pages/share-photo/share-photo';
+import { LocalNotifications } from '@ionic-native/local-notifications';
 
 @NgModule({
   declarations: [
@@ -85,6 +85,7 @@ import { SharePhotoPage} from '../pages/share-photo/share-photo';
     SocialSharing,
     Network,
     Camera,
+    LocalNotifications,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

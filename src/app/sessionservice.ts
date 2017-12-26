@@ -22,6 +22,8 @@ export class SessionService {
     userInfo:any;
     otherUserInfo:any;
     budgetInfo:any;
+    function:any;
+    reminder:any;
     constructor(public db: AngularFireDatabase,public http:Http,public events:Events,public toastCtrl:ToastController,public nativeStorage:NativeStorage,public toast:Toast){
     }
 
@@ -158,6 +160,18 @@ export class SessionService {
               // return item;
         
     }
+
+    setReminder(reminderInfo)
+    {
+      this.reminder=reminderInfo;  
+    }
+
+    getReminder()
+    {
+      return this.reminder;
+    }
+
+    
     setBudget(budget)
     {
         this.budgetInfo=budget;
@@ -166,6 +180,18 @@ export class SessionService {
     {
       return this.budgetInfo;
     }
+
+    setFunction(function2)
+    {
+        this.function=function2;
+    }
+
+    getFunction()
+    {
+     return this.function;
+    }
+
+   
 }
 
     

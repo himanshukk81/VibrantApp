@@ -18,16 +18,16 @@ export class profile {
   // headers:any;
   // capturedImage:any;
   // base64Image:any;
-  user:any;
+  user:any={};
 
   constructor(public navCtrl: NavController,
     public http:Http,public camera: Camera,public actionCtrl:ActionSheetController,public socialSharing: SocialSharing,public service:SessionService) {
-   
-       this.user=this.service.getUser();
-
-
-
-    }
+      
+      if(this.service.getUser())
+      {
+        this.user=this.service.getUser();
+      }
+  }
 
     ionViewDidLoad()
     {

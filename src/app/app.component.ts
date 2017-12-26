@@ -15,6 +15,9 @@ import { LocalNotifications } from '@ionic-native/local-notifications';
 import {Http, Response,RequestOptions,Headers} from '@angular/http';
 import { Camera, CameraOptions } from '@ionic-native/camera';
 import { UsersPage } from '../pages/users/users';
+import { BudgetsPage} from '../pages/budgets/budgets';
+import { FunctionsPage} from '../pages/functions/functions';
+import { RemindersPage} from '../pages/reminders/reminders';
 
 // import { FirebaseAuth } from '@firebase/auth-types';
 // import { FirebaseDatabase } from '@firebase/database-types';
@@ -30,7 +33,7 @@ export class MyApp {
   @ViewChild(NavController) navCtrl: NavController;
 
 
-  rootPage: any=LoginPage;
+  rootPage: any=RemindersPage;
   headers:any;
   pages: Array<{title: string, component: any}>;
 
@@ -44,6 +47,9 @@ export class MyApp {
       {title:'Share Photo',component:HomePage},
       {title:'Users',component:UsersPage},
       {title:'Profile',component:profile},
+      {title:'Budgets',component:BudgetsPage},
+      {title:'Functions',component:FunctionsPage},
+      {title:'Reminders',component:RemindersPage},
       {title:'Logout',component:LoginPage},
 
     ];

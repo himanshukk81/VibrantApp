@@ -44,6 +44,8 @@ export class LoginPage {
         this.loader=false;
     })
   }
+  
+  
   login()
   {    
       if(!this.user.email)
@@ -66,7 +68,6 @@ export class LoginPage {
     profileModal.present();
   }
 }
-
 
 
 @Component({
@@ -176,9 +177,6 @@ export class RegisterUser{
             this.service.showToast2("Something went wrong please try again");
         });
     }
-
-  
-    
     closeModal()
     {
       this.viewCtrl.dismiss();
