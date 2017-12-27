@@ -11,7 +11,9 @@
 
     <ion-spinner name="dots" *ngIf="loader"></ion-spinner>
       <ion-list>
-        <ion-item *ngFor="let user of users" (click)="userDetail(user)">
+        <ion-item *ngFor="let user of users | async" (click)="userDetail(user)">
+          
+          <!-- <div *ngIf="user.key!=userInfo.key"> -->
           <div>
               <ion-avatar item-start>
                 <img src="../../assets/imgs/user.png" *ngIf="!user.imageUrl">

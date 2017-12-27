@@ -31,9 +31,7 @@ import { RemindersPage} from '../pages/reminders/reminders';
 export class MyApp {
   @ViewChild(Nav) nav: Nav;
   @ViewChild(NavController) navCtrl: NavController;
-
-
-  rootPage: any=RemindersPage;
+  rootPage: any=UsersPage;
   headers:any;
   pages: Array<{title: string, component: any}>;
 

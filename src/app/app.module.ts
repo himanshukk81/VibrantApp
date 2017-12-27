@@ -31,6 +31,7 @@ import { RemindersPage} from '../pages/reminders/reminders';
 import { ManageRemindersPage} from '../pages/reminders/reminders';
 import { SharePhotoPage} from '../pages/share-photo/share-photo';
 import { LocalNotifications } from '@ionic-native/local-notifications';
+import { ImagePicker } from '@ionic-native/image-picker';
 
 @NgModule({
   declarations: [
@@ -86,6 +87,7 @@ import { LocalNotifications } from '@ionic-native/local-notifications';
     Network,
     Camera,
     LocalNotifications,
+    ImagePicker,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })
