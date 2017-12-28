@@ -8,15 +8,13 @@
 <ion-content>
 
       <div class="message-wrap">
-
-            {{messages}}
           <div *ngFor="let message of messages" 
-               class="message" [class.left]="false"
-               [class.right]="true"  
+               class="message" [class.left]="isYou(message)"
+               [class.right]="isMe(message)"  
                >
               <!-- <ion-spinner name="dots" *ngIf="message.status === 'pending'"></ion-spinner> -->
              
-            <div>
+            <div *ngIf="showMessage(message)" >
                 <div class="msg-detail"> 
                     <div class="msg-content" >
                        <span class="triangle"></span>
@@ -31,9 +29,9 @@
   <ion-grid class="input-wrap">
       <ion-row>
           <ion-col col-2>
-              <!-- <button ion-button clear icon-only item-right (click)="switchEmojiPicker()">
+              <button ion-button clear icon-only item-right (click)="chooseImage()">
                   <ion-icon name="md-happy"></ion-icon>
-              </button> -->
+              </button>
           </ion-col>
           <ion-col col-8>
               <ion-textarea #chat_input
