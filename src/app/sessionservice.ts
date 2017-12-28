@@ -24,6 +24,7 @@ export class SessionService {
     budgetInfo:any;
     function:any;
     reminder:any;
+    text:any;
     constructor(public db: AngularFireDatabase,public http:Http,public events:Events,public toastCtrl:ToastController,public nativeStorage:NativeStorage,public toast:Toast){
     }
 
@@ -37,6 +38,8 @@ export class SessionService {
     {
         return this.token;
     }
+
+
      showToast2(message)
     {
         let toast = this.toastCtrl.create({
@@ -190,6 +193,8 @@ export class SessionService {
     {
      return this.function;
     }
+
+ 
 
    
 }
