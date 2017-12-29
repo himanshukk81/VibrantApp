@@ -32,7 +32,24 @@ import { ManageRemindersPage} from '../pages/reminders/reminders';
 import { SharePhotoPage} from '../pages/share-photo/share-photo';
 import { LocalNotifications } from '@ionic-native/local-notifications';
 import { ImagePicker } from '@ionic-native/image-picker';
+// import { ImagePickerMock } from '@ionic-native-mocks/image-picker';
+import { Base64 } from '@ionic-native/base64';
 
+class imagePickerMock extends ImagePicker {
+  getPictures(options) {
+    return new Promise((resolve, reject) => {
+      resolve("file:///data/data/com.vibrant.application/cache/tmp_IMG-20171227-WA00231298561602.jpg");
+    })
+  }
+}
+
+class Base64Mock extends Base64 {
+  getPictures(options) {
+    return new Promise((resolve, reject) => {
+      resolve("file:///data/data/com.vibrant.application/cache/tmp_IMG-20171227-WA00231298561602.jpg");
+    })
+  }
+}
 @NgModule({
   declarations: [
     MyApp,
@@ -88,6 +105,8 @@ import { ImagePicker } from '@ionic-native/image-picker';
     Camera,
     LocalNotifications,
     ImagePicker,
+    Base64,
+    // { provide: ImagePicker, useClass: imagePickerMock },
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

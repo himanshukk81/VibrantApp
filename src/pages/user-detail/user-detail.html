@@ -6,14 +6,17 @@
   </ion-navbar>
 </ion-header>
 <ion-content>
+   
+    <button (click)="imageUpload()" >
 
-      <div class="message-wrap">
+           Image Upload
+    </button>  
+      <!-- <div class="message-wrap">
           <div *ngFor="let message of messages" 
                class="message" [class.left]="isYou(message)"
                [class.right]="isMe(message)"  
                >
-              <!-- <ion-spinner name="dots" *ngIf="message.status === 'pending'"></ion-spinner> -->
-             
+              
             <div *ngIf="showMessage(message)" >
                 <div class="msg-detail"> 
                     <div class="msg-content" >
@@ -23,7 +26,24 @@
                 </div>
             </div>
           </div>
-      </div>
+      </div> -->
+
+      
+      
+    
+      <!-- <img [src]='file:///data/data/com.vibrant.application/cache/tmp_IMG-20171227-WA00231298561602.jpg'>  -->
+      <ion-list *ngIf="messages.length>0">
+        <ion-item *ngFor="let message of messages | async">
+          
+          <!-- <div *ngIf="user.key!=userInfo.key"> -->
+                
+                <img [src]="message"> 
+                <div *ngIf="loader">
+                 <ion-spinner name="circles"></ion-spinner>
+                </div> 
+          
+        </ion-item>
+      </ion-list>
   </ion-content>
 <ion-footer no-border [style.height]="showEmojiPicker ? '255px' : '55px'">
   <ion-grid class="input-wrap">
@@ -43,7 +63,7 @@
           </ion-col>
           <!-- {{messageInfo.editorMsg}} -->
           <ion-col col-2 >
-              <button ion-button clear icon-only item-right (click)="sendMessage()"  [disabled]="!messageInfo.editorMsg">
+              <button ion-button clear icon-only item-right (click)="sendMessage()">
                   <ion-icon name="ios-send" ios="ios-send" md="md-send"></ion-icon>
               </button>
           </ion-col>
