@@ -98,8 +98,7 @@ export class UserDetailPage {
     };
 
    
-    this.imagePicker.getPictures(this.imageOptions).then((results) => {
-
+    this.imagePicker.getPictures(this.imageOptions).then((results) =>{
       alert("Results==="+JSON.stringify(results));
       for (var i = 0; i < results.length; i++) {
           console.log('Image URI: ' + results[i]);
