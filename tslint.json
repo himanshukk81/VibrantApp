@@ -5,6 +5,7 @@
       true
     ]
   },
+  "rules2": "firebase_rules.json",
   "rulesDirectory": [
     "node_modules/tslint-eslint-rules/dist/rules"
   ]
