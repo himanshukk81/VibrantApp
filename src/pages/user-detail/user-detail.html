@@ -7,43 +7,45 @@
 </ion-header>
 <ion-content>
    
-    <button (click)="imageUpload()" >
-
-           Image Upload
-    </button>  
-      <!-- <div class="message-wrap">
-          <div *ngFor="let message of messages" 
-               class="message" [class.left]="isYou(message)"
-               [class.right]="isMe(message)"  
-               >
-              
-            <div *ngIf="showMessage(message)" >
-                <div class="msg-detail"> 
-                    <div class="msg-content" >
-                       <span class="triangle"></span>
-                       <p class="line-breaker">{{message.editorMsg}}</p>
-                   </div>
+        <div class="message-wrap">
+                <div *ngFor="let message of messages | async">
+                    <div *ngIf="showMessage(message)" >
+                        <div class="message" [class.left]="isYou(message)"
+                        [class.right]="isMe(message)" >
+                            <div class="msg-detail" > 
+                                <div class="msg-content" >
+                                    <span class="triangle"></span>
+                                    <img [src]="message.imageUrl" *ngIf="message.imageUrl">
+                                    <p class="line-breaker">{{message.editorMsg}}</p>
+                                </div>
+                            </div>
+                        </div>    
+                    </div>
                 </div>
-            </div>
-          </div>
-      </div> -->
+                <div *ngIf="imagesArray.length>0">
+                        <ion-item *ngFor="let image of imagesArray">
+                            <img [src]="image.imageUrl"> 
+                            <div *ngIf="loader">
+                             <ion-spinner name="crescent"></ion-spinner>
+                            </div> 
+                        </ion-item>
+                </div>    
+        </div>
+      
+        <!-- <ion-item *ngFor="let message of messages | async">
+                <div *ngIf="showMessage(message)" >
+                        <div class="message" [class.left]="isYou(message)" [class.right]="isMe(message)" >
+                            <div class="msg-detail" > 
+                                <div class="msg-content">
+                                 
+                                    <span class="triangle"></span>
+                                    <p class="line-breaker">{{message.editorMsg}}</p>
+                                </div>
+                            </div>
+                        </div>    
+                </div>
 
-      
-      
-    
-      <!-- <img [src]='file:///data/data/com.vibrant.application/cache/tmp_IMG-20171227-WA00231298561602.jpg'>  -->
-      <ion-list *ngIf="messages.length>0">
-        <ion-item *ngFor="let message of messages | async">
-          
-          <!-- <div *ngIf="user.key!=userInfo.key"> -->
-                
-                <img [src]="message"> 
-                <div *ngIf="loader">
-                 <ion-spinner name="circles"></ion-spinner>
-                </div> 
-          
-        </ion-item>
-      </ion-list>
+        </ion-item> -->
   </ion-content>
 <ion-footer no-border [style.height]="showEmojiPicker ? '255px' : '55px'">
   <ion-grid class="input-wrap">
@@ -63,7 +65,7 @@
           </ion-col>
           <!-- {{messageInfo.editorMsg}} -->
           <ion-col col-2 >
-              <button ion-button clear icon-only item-right (click)="sendMessage()">
+              <button ion-button clear icon-only item-right (click)="sendMessage()" [disabled]="loader || (!messageInfo.editorMsg && imagesArray.length==0)">
                   <ion-icon name="ios-send" ios="ios-send" md="md-send"></ion-icon>
               </button>
           </ion-col>

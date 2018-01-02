@@ -194,9 +194,31 @@ export class SessionService {
      return this.function;
     }
 
- 
 
-   
+    saveUserInfo(userInfo)
+    {
+       
+          this.db.list('/user_detail').push(userInfo).then(({key}) => 
+          {
+            userInfo.key=key;
+            this.updateKey(userInfo)
+          },error=>{
+            this.showToast2("Something went wrong please try again");
+          })
+       
+        
+    }
+    updateKey(user)
+    {
+        this.db.object('/user_detail/'+user.key).update(user).then((profile: any) =>{
+            this.setUser(user);
+            this.events.publish('user:insert:successfully'); 
+             
+          })
+        .catch((err: any) => {
+            this.showToast2("Something went wrong please try again");
+        });
+    }
 }
 
     

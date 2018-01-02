@@ -7,7 +7,9 @@ import { Observable } from 'rxjs/Observable';
 import { Nav, Platform,AlertController,NavController,NavParams,MenuController,ModalController,ViewController} from 'ionic-angular';
 import { AngularFireDatabase, FirebaseListObservable} from 'angularfire2/database-deprecated';
 import {Events,ToastController } from 'ionic-angular';
-
+import { AuthService } from '../../app/auth.service';
+import { Facebook } from '@ionic-native/facebook';
+import firebase from 'firebase';
 @Component({
   selector: 'page-Login',
   templateUrl: 'Login.html'
@@ -18,7 +20,7 @@ export class LoginPage {
   loader:any;
   userStatus:boolean;
   firstTimeUser:any;
-  constructor(public events:Events, public db: AngularFireDatabase,public modalCtrl:ModalController,public menu: MenuController,public navCtrl: NavController,public service:SessionService){
+  constructor(public facebook:Facebook, public authService:AuthService,public events:Events, public db: AngularFireDatabase,public modalCtrl:ModalController,public menu: MenuController,public navCtrl: NavController,public service:SessionService){
     this.user={};
     this.menu.swipeEnable(false);
   }
@@ -43,6 +45,11 @@ export class LoginPage {
         this.firstTimeUser=false;
         this.loader=false;
     })
+
+    this.events.subscribe('user:insert:successfully', users => {
+      this.loader=false;
+      this.navCtrl.setRoot(HomePage);
+    })
   }
   
   
@@ -62,11 +69,87 @@ export class LoginPage {
       this.user.email=this.user.email.toLowerCase();
       this.service.verifyUser(this.user.email,2);
   }
+  signInWithFacebook()
+  {
+    // this.authService.signInWithFacebook().then((res) => { 
+
+    //   this.user.displayName=res.user.displayName;
+    //   this.user.photoURL=res.user.photoURL;
+    //   this.user.email=res.user.email;
+    //   this.user.uid=res.user.uid;
+    //   this.service.setUser(this.user); 
+    //   this.checkUser();
+    //     console.log("Login Success by faceboook=="+JSON.stringify(res));
+    //   })
+    // .catch((err) =>{
+    //   alert("Error==="+err.message);
+    //   console.log("Login Failed by facebook="+err);
+    // });
+    this.facebook.login(['email']).then( (response) => {
+      const facebookCredential = firebase.auth.FacebookAuthProvider.credential(response.authResponse.accessToken);
+      alert("Facebook Credential=="+JSON.stringify(facebookCredential));
+      firebase.auth().signInWithCredential(facebookCredential)
+        .then((success) => {
+
+          this.loader=true;
+          console.log("Firebase success: " + JSON.stringify(success));
+          this.user={};
+          this.user= success;
+          // alert("User info=="+JSON.stringify(this.user));
+          console.log("User info=="+JSON.stringify(this.user))
+            this.user.displayName=success.displayName;
+            this.user.photoURL=success.photoURL;
+            this.user.email=success.email;
+            this.user.uid=success.user.uid;
+            // this.service.setUser(this.user); 
+            this.checkUser();
+        })
+        .catch((error) => {
+          alert("Firebase Failure");
+          console.log("Firebase failure: " + JSON.stringify(error));
+      });
+
+    }).catch((error) => {
+       alert("Facebook Failure=="+error);
+       console.log(error) 
+      
+      });
+  }
+
+ 
+  
+  
+
+  checkUser()
+  {
+    var item=this.db.list('/user_detail',{
+      query:{
+        orderByChild:'uid',
+        equalTo:this.user.uid,
+      },
+    }).subscribe(snapshot =>{
+            if(snapshot.length>0)
+            {
+              this.service.setUser(snapshot[0]);
+              this.navCtrl.setRoot(HomePage);
+            }
+            else
+            {
+              this.service.saveUserInfo(this.user)
+            }
+            this.loader=false;
+      },error=>{
+        var err1="Error=="+error;
+        this.service.showToast2(err1);
+      });
+  }
   signUp()
   {
     let profileModal = this.modalCtrl.create(RegisterUser);
     profileModal.present();
   }
+
+  
 }
 
 
@@ -101,10 +184,14 @@ export class RegisterUser{
           else
           {
             console.log("New user entry");
-            this.saveUserInfo(); 
+            // this.saveUserInfo(); 
+            this.service.saveUserInfo(this.user)
           }
         }
         
+      })
+      this.events.subscribe('user:insert:successfully', users => {
+        this.navCtrl.setRoot(HomePage);
       })
     }
     saveUser()
@@ -152,31 +239,31 @@ export class RegisterUser{
             this.firstTime=false;
           }
     }
-    saveUserInfo()
-    {
-      this.db.list('/user_detail').push(this.user).then(({key}) => 
-      {
-        this.user.key=key;
-        this.updateKey(this.user)
-      },error=>{
-        this.service.showToast2("Something went wrong please try again");
-      })
-    }
-    updateKey(user)
-    {
-        this.db.object('/user_detail/'+user.key).update(user).then((profile: any) =>{
-              this.closeModal();
-              this.service.setUser(user);
-              this.navCtrl.setRoot(HomePage);
-              this.loader=false;
-              console.log("Successfully updated location====");
-          })
-        .catch((err: any) => {
-            var error="error=="+err;
-            this.loader=false;
-            this.service.showToast2("Something went wrong please try again");
-        });
-    }
+    // saveUserInfo()
+    // {
+    //   this.db.list('/user_detail').push(this.user).then(({key}) => 
+    //   {
+    //     this.user.key=key;
+    //     this.updateKey(this.user)
+    //   },error=>{
+    //     this.service.showToast2("Something went wrong please try again");
+    //   })
+    // }
+    // updateKey(user)
+    // {
+    //     this.db.object('/user_detail/'+user.key).update(user).then((profile: any) =>{
+    //           this.closeModal();
+    //           this.service.setUser(user);
+    //           this.navCtrl.setRoot(HomePage);
+    //           this.loader=false;
+    //           console.log("Successfully updated location====");
+    //       })
+    //     .catch((err: any) => {
+    //         var error="error=="+err;
+    //         this.loader=false;
+    //         this.service.showToast2("Something went wrong please try again");
+    //     });
+    // }
     closeModal()
     {
       this.viewCtrl.dismiss();

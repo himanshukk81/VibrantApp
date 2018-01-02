@@ -8,6 +8,9 @@ import { count } from 'rxjs/operators/count';
 import { Base64 } from '@ionic-native/base64';
 import { AngularFireDatabase, FirebaseListObservable} from 'angularfire2/database-deprecated';
 
+
+import * as base64 from 'base64-img';
+
 /**
  * Generated class for the UserDetailPage page.
  *
@@ -29,8 +32,9 @@ export class UserDetailPage {
   @ViewChild(Content) content: Content;
   @ViewChild('chat_input') messageInput: TextInput;
   userInfo:any;
+  // messageInfo1:any={};
   messageInfo:any={};
-  messages:any=[];
+  // messages:any=[];
   imageOptions:any={};
   imagesArray:any=[];
   loader:boolean=false;
@@ -38,9 +42,13 @@ export class UserDetailPage {
   storageRef:any=firebase.storage().ref();
   counter:number=0;
   counterDB:number=0;
+  messages: FirebaseListObservable<any[]>;
+  
   constructor(public db:AngularFireDatabase, public base64:Base64,public camera:Camera,public imagePicker: ImagePicker,public navCtrl: NavController,public service:SessionService) 
   {
+    this.messageInfo.editorMsg='';
     this.userInfo=this.service.getOtherUserInfo();
+    this.messages=this.db.list('/messages');
   }
 
 
@@ -98,34 +106,38 @@ export class UserDetailPage {
   {
     // this.messages.push({"editorMsg":this.messageInfo.editorMsg});
     // this.messageInfo.editorMsg='';
+    // if(this.imagesArray.length>0)
+    // {
+    //   this.imageUpload();
+    // }
+    // var base64=null;
+    // this.uploadServer(base64);
+    this.loader=true;
+    // this.messageInfo.editorMsg='';  
     if(this.imagesArray.length>0)
     {
       this.imageUpload();
     }
+    else
+    {
+      this.addInDB();
+    }
+    
   }
 
   chooseImage()
   { 
     this.imageOptions= {
       maximumImagesCount:50, 
-      quality: 90, 
+      quality: 100, 
       width: 200, 
       height: 200
     };   
     this.imagePicker.getPictures(this.imageOptions).then((results) => {
-
-      // alert("Results==="+JSON.stringify(results));
       for (var i = 0; i < results.length; i++) {
-        this.imagesArray.push(results[i]);
-
-        this.messages.push(results[i]);
-          console.log('Image URI: ' + results[i]);
+        this.imagesArray.push({"imageUrl":results[i]});
+        console.log('Image URI: ' + results[i]);
       }
-      // alert("Successfully fetch images===="+JSON.stringify(this.imagesArray));
-      // console.log('Image URI: '+JSON.stringify(this.imagesArray));
-
-      // this.imagesArray.push(results);
-      
     }, (err) => { 
       alert("Error 68==="+JSON.stringify(err));
       console.log("Failed to fetch images===="+JSON.stringify(err));
@@ -133,93 +145,134 @@ export class UserDetailPage {
   }
   uploadInDB()
   {
-
     if(this.imagesArray.length==this.counterDB)
-    {
+    {   
       this.loader=false;
+      
+      this.imagesArray=[];
+      console.log("Completely uploaded");
     }
     else
     {
+      this.messageInfo.imageUrl=this.imagesArray[this.counterDB].imageUrl;
       this.addInDB();
     }
   }
 
   addInDB()
     {
-      this.db.list('/messages').push(this.imagesArray[this.counterDB].imageUrl).then(resolve => {
-        console.log('all good');
-        // this.messages.remove(this.messageInfo);
-        // this.loader=false;
-        // this.messageInfo.pending=false;
+      this.messageInfo.receiverId=this.userInfo.key;
+      this.messageInfo.senderId=this.service.getUser().key;
+      this.db.list('/messages').push(this.messageInfo).then(({key}) => 
+      {
+         if(this.imagesArray.length>0)
+         {
+          this.imagesArray.splice(this.counterDB,1);
+         }
+        console.log("Insert");
         this.scrollToBottom();
-        this.counterDB++;
-        this.uploadInDB();
-        // this.sendNotification();
-        // this.messageInfo.status="completed";
-      }, reject => {
-        console.log('error');
-        this.loader=false;
-        this.scrollToBottom();
-        // this.messageInfo.status="failed";
+        this.messageInfo.key=key;
+        this.updateKey(this.messageInfo)
+      },error=>{
+        this.addInDB();
+        this.service.showToast2("Something went wrong please try again");
       })
+
+      
+    }
+
+    updateKey(message)
+    {
+
+        // alert("Message===="+JSON.stringify(message));
+        this.db.object('/messages/'+message.key).update(message).then((message2: any) =>{
+              console.log("update key===="+this.counterDB);
+              this.messageInfo.editorMsg='';  
+              if(this.imagesArray.length>0)
+              {
+                this.counterDB++;
+                this.uploadInDB();
+              }
+          })
+        .catch((err: any) => {
+            // this.service.showToast2("Failed"+err);
+            console.log("error===="+err);
+            // this.updateKey(message);
+        });
     }
   imageUpload()
   {
-    this.loader=true;
-
-    // alert("Image Array=="+JSON.stringify(this.imagesArray));
+    
     console.log("array=="+this.imagesArray.length);
+    // this.imagesArray.push({"imageUrl":"file:///data/data/com.vibrant.application/cache/tmp_IMG-20180102-WA0001-795329927.jpg"});
+   
+    
     if(this.imagesArray.length==this.counter)
     {
       // this.loader=false;
-      alert("upload in s3")
+      // alert("Upload in s3");
+      console.log("Upload in s3");
       this.uploadInDB();
     }
     else
     {
-
-      // alert("image==="+this.imagesArray[this.counter]);
+      console.log("New image upload");
       console.log("image="+this.imagesArray[this.counter]);
       let filePath: string = this.imagesArray[this.counter];
-      // alert("file path==="+filePath);
-      this.base64.encodeFile(filePath).then((base64File: string) => {
-        console.log(base64File);
-        // alert("convert successfully");
-        this.uploadServer(base64File);
-  
-      }, (err) => {
-        alert("failed to convert successfully");
-        console.log(err);
-      });
+      this.convertToBase64(this.imagesArray[this.counter].imageUrl, 'image/png').then(
+        data => {
+          var base64File = data.toString();
+          console.log("Base64==="+base64File);
+          this.uploadServer(base64File);
+        },err=>{
+          alert("Error==="+err);
+        }
+      );
     }   
   }
 
+  convertToBase64(url, outputFormat) {
+    return new Promise((resolve, reject) => {
+      let img = new Image();
+      img.crossOrigin = 'Anonymous';
+      img.onload = function () {
+        let canvas = <HTMLCanvasElement>document.createElement('CANVAS'),
+          ctx = canvas.getContext('2d'),
+          dataURL;
+        canvas.height = img.height;
+        canvas.width = img.width;
+        ctx.drawImage(img, 0, 0);
+        dataURL = canvas.toDataURL(outputFormat);
+        canvas = null;
+        resolve(dataURL);
+      };
+      img.src = url;
+    });
+  }
 
   uploadServer(base64)
   {
-      // alert("uploading==");
-      // console.log(base64);
+
+
       const filename = Math.floor(Date.now() / 1000);
       const imagstorageRefeRef = this.storageRef.child(`images/${filename}.jpg`);
-      // alert("firebase string=="+firebase.storage.StringFormat.DATA_URL);
       console.log("firebase string=="+firebase.storage.StringFormat.DATA_URL);
-      // var imageSource="data:image/jpeg;base64,"+this.imagesArray[this.counter];
-    
-
       imagstorageRefeRef.putString(base64, firebase.storage.StringFormat.DATA_URL).then((snapshot)=> {
-        alert("image uploaded successfully====="+this.counter);
-        console.log("Successfully uploaded==="+this.counter);
-        this.imagesArray[this.counter].imageUrl = imagstorageRefeRef.snapshot.downloadURL;
-        alert("download image Url=="+this.imagesArray[this.counter].imageUrl);
-        this.counter++;
-        this.imageUpload();
-
-        }, (err) => {
-
-              // alert("failed to upload==="+err);
-              console.log("Error::::::;"+err);
-        
-          //    // Handle error
-        });
+      // alert("Successfully uploaded==="+this.counter);
+      // alert("image Array=="+JSON.stringify(this.imagesArray));
+      // alert("image object=="+JSON.stringify(this.imagesArray[this.counter]));
+      // alert("image Value=="+this.imagesArray[this.counter].imageUrl);
+      console.log("image Array=="+JSON.stringify(this.imagesArray));
+      // console.log("snapshot==="+snapshot.downloadURL);
+      // alert("snapshot==="+snapshot.downloadURL);
+      this.imagesArray[this.counter].imageUrl=snapshot.downloadURL;
+      
+      console.log("Url======"+JSON.stringify(this.imagesArray));
+      this.counter++;
+      this.imageUpload();
+      }, (err) => {
+            console.log("Error::::::;"+err);
+            alert("Failed to upload on server")
+      });
   }
 }

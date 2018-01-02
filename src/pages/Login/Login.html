@@ -25,8 +25,18 @@
 
   <div text-center>
     <button ion-button round outline (click)="signUp()" [disabled]="loader">New User?</button>
-    <button ion-button round outline (click)="guestLogin()">Guest</button>
+    <!-- <button ion-button round outline (click)="guestLogin()">Guest</button> -->
   </div>
+  <br/>
+  <!-- <div text-center>
+      <p>OR</p>
+  </div>
+
+  <div text-center>
+      <button ion-button  (click)="signInWithFacebook()"><ion-icon name="logo-facebook"></ion-icon> <span style="color:white"> Facebook</span></button>
+  </div> -->
+  
+
   
   <div text-center *ngIf="loader">
     <ion-spinner name="circles" ></ion-spinner>

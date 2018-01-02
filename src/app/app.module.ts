@@ -34,22 +34,33 @@ import { LocalNotifications } from '@ionic-native/local-notifications';
 import { ImagePicker } from '@ionic-native/image-picker';
 // import { ImagePickerMock } from '@ionic-native-mocks/image-picker';
 import { Base64 } from '@ionic-native/base64';
+import { AuthService } from './auth.service';
+import { AngularFireAuth } from 'angularfire2/auth';
+import { Facebook } from '@ionic-native/facebook';
 
-class imagePickerMock extends ImagePicker {
-  getPictures(options) {
-    return new Promise((resolve, reject) => {
-      resolve("file:///data/data/com.vibrant.application/cache/tmp_IMG-20171227-WA00231298561602.jpg");
-    })
-  }
-}
+// class imagePickerMock extends ImagePicker {
+//   getPictures(options) {
+//     return new Promise((resolve, reject) => {
+      
+//       resolve("file:///data/data/com.vibrant.application/cache/tmp_IMG-20171227-WA00231298561602.jpg");
+//     })
+//   }
+// }
 
-class Base64Mock extends Base64 {
-  getPictures(options) {
-    return new Promise((resolve, reject) => {
-      resolve("file:///data/data/com.vibrant.application/cache/tmp_IMG-20171227-WA00231298561602.jpg");
-    })
-  }
-}
+// class Base64Mock extends Base64 {
+
+//   encodeFile(options) {
+//     return new Promise((resolve, reject) => {
+//       resolve("data:image/*;charset=utf-8;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAMCAgMCAgMDAwMEAwMEBQgFBQQEBQoHBwYIDAoMDAsK");
+//     })
+//   }
+  
+  // getBase64Mock(options) {
+  //   return new Promise((resolve, reject) => {
+  //     resolve("data:image/*;charset=utf-8;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAMCAgMCAgMDAwMEAwMEBQgFBQQEBQoHBwYIDAoMDAsK");
+  //   })
+  // }
+// }
 @NgModule({
   declarations: [
     MyApp,
@@ -106,7 +117,11 @@ class Base64Mock extends Base64 {
     LocalNotifications,
     ImagePicker,
     Base64,
+    AuthService,
+    AngularFireAuth,
+    Facebook,
     // { provide: ImagePicker, useClass: imagePickerMock },
+    // { provide: Base64, useClass: Base64Mock },
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

@@ -8,22 +8,22 @@
 </ion-header>
  
  <ion-content>
-
+    
     <ion-spinner name="dots" *ngIf="loader"></ion-spinner>
       <ion-list>
         <ion-item *ngFor="let user of users | async" (click)="userDetail(user)">
-          
           <!-- <div *ngIf="user.key!=userInfo.key"> -->
-          <div>
-              <ion-avatar item-start>
-                <img src="../../assets/imgs/user.png" *ngIf="!user.imageUrl">
-                <img src="{{user.imageUrl}}" *ngIf="user.imageUrl">
-                <img src="{{user.picture}}" *ngIf="user.picture">
-              </ion-avatar>
-              <h2 *ngIf="user.first_name">{{user.name}}</h2>
-              <h3>{{user.email}}</h3>
-              <h4 >{{user.mobile}}</h4>
-          </div>    
+            <div>
+                <ion-avatar item-start>
+                  <img src="../../assets/imgs/user.png" *ngIf="!user.imageUrl">
+                  <img src="{{user.imageUrl}}" *ngIf="user.imageUrl">
+                  <img src="{{user.picture}}" *ngIf="user.picture">
+                </ion-avatar>
+                <h2 *ngIf="user.first_name">{{user.name}}</h2>
+                <h3>{{user.email}}</h3>
+                <h4 >{{user.mobile}}</h4>
+            </div>      
+          <!-- </div>   -->
         </ion-item>
       </ion-list>
  </ion-content>

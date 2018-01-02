@@ -22,16 +22,12 @@ export class UsersPage {
     {
       this.userInfo=this.service.getUser();
       this.users=this.db.list('/user_detail');
-      
+      // this.users.push("Yogesh"); 
     }
-
-
     userDetail(info)
     {
-   
+      // alert("user detail page")
       this.service.setOtherUserInfo(info);
       this.navCtrl.push(UserDetailPage);
     }
-
-
 }
