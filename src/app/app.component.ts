@@ -37,8 +37,9 @@ export class MyApp {
 
   constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen,public service:SessionService,public native:NativeStorage,public sharing:SocialSharing,public alertCtrl:AlertController  
     ,public nativeStorage:NativeStorage,public network:Network,public localNotifications:LocalNotifications,public http:Http) {
-      // this.initializeApp();
+      this.initializeApp();
     // this.enableLocation();  
+    // this.rootPage=RemindersPage;
     // used for an example of ngFor and navigation
     this.pages = [
       { title: 'Home', component: HomePage},
@@ -61,7 +62,9 @@ export class MyApp {
       this.checkUserStatus();
       // this.initPushNotification();
       this.checkNetwork();
+      this.initLocalNotification();
       // this.enableLocation();
+      this.initLocalNotification();
     });
   }
  
@@ -108,6 +111,17 @@ export class MyApp {
               this.rootPage=LoginPage;
             }  
         );
+  }
+
+  initLocalNotification()
+  {
+    this.localNotifications.on('click', () => {
+
+      console.log("Notify local notification");
+      // alert("Notificy")
+      // let json = JSON.parse(notification.data);
+      this.rootPage=RemindersPage;
+    })
   }
   // initPushNotification()
   // {

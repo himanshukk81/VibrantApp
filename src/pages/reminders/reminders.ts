@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams,ModalController,ViewController,AlertController  } from 'ionic-angular';
+import { IonicPage, NavController, NavParams,ModalController,ViewController,AlertController,Platform  } from 'ionic-angular';
 import { SessionService } from '../../app/sessionservice';
 import { AngularFireDatabase, FirebaseListObservable} from 'angularfire2/database-deprecated';
 import { LocalNotifications } from '@ionic-native/local-notifications';
@@ -17,9 +17,12 @@ import { LocalNotifications } from '@ionic-native/local-notifications';
 })
 export class RemindersPage {
   reminder:any={};
+  reminderList=[];
   reminders: FirebaseListObservable<any[]>;
   constructor(public db: AngularFireDatabase,public modalCtrl:ModalController,public service:SessionService,public navCtrl: NavController, public navParams: NavParams) {
     this.reminders=this.db.list('/reminders');
+
+   
   }
 
   ionViewDidLoad() {
@@ -47,6 +50,7 @@ export class RemindersPage {
 
   addReminder()
    {
+    
     this.service.setReminder(null);
     let profileModal = this.modalCtrl.create(ManageRemindersPage);
     profileModal.present();
@@ -63,11 +67,37 @@ export class ManageRemindersPage {
   loader:any;
   update:boolean;
   notifications:any=[];
+  remindersList:any=[];
   // myDate:any=new Date();
   // tzoffset:any = (new Date()).getTimezoneOffset() * 60000; //offset in milliseconds
   
-  constructor(public alertCtrl:AlertController,public localNotifications:LocalNotifications,public viewCtrl:ViewController,public db: AngularFireDatabase,public service:SessionService,public navCtrl: NavController, public navParams: NavParams) {
- 
+  constructor(public platform: Platform,public alertCtrl:AlertController,public localNotifications:LocalNotifications,public viewCtrl:ViewController,public db: AngularFireDatabase,public service:SessionService,public navCtrl: NavController, public navParams: NavParams) {
+
+    this.db.list('/reminders', { preserveSnapshot: true})
+    .subscribe(snapshots=>{
+        snapshots.forEach(snapshot => {
+          this.remindersList.push(snapshot.val());
+          // console.log("85 line======"+snapshot.key, snapshot.val());
+        });
+    })
+    this.platform.ready().then((readySource) => {
+      // this.localNotifications.on('click', (notification, state) => {
+      //   // let json = JSON.parse(notification.data);
+      //   let alert = alertCtrl.create({
+      //     title: notification.title,
+      //     subTitle:notification.text
+      //   });
+      //   alert.present();
+      // })
+      // this.remindersList=this.db.list('/reminders');
+
+      
+      // this.remindersList.forEach(element => {
+        
+      //         alert(element);
+      //         console.log(element);
+      //        });
+    });
     // console.log("date:::"+this.myDate);
     // this.reminder.time=(new Date(Date.now() - this.tzoffset)).toISOString().slice(0,-1);
   }
@@ -94,89 +124,39 @@ export class ManageRemindersPage {
   saveReminderInfo()
   {
 
-    // if(!this.reminder.name)
-    // {
-    //   alert("Please enter reminder name");
-    //   return;
-    // }
-    // if(!this.reminder.date)
-    // {
-    //   alert("Please enter reminder date");
-    //   return;
-    // }
 
-    // var selectedTime=new Date();
-
-    console.log("time===="+JSON.stringify(this.reminder));
-    console.log("time==="+this.reminder.time);
+    // console.log("time===="+JSON.stringify(this.reminder));
+    // console.log("time==="+this.reminder.time);
 
 
-    console.log("Before update:::"+this.reminder.date)
+    // console.log("Before update:::"+this.reminder.date)
+    //  console.log("Notifications to be scheduled: ", new Date(this.notifications[0].at));
+
     this.reminder.hour=this.reminder.time.split(":")[0];
     this.reminder.minute=this.reminder.time.split(":")[1];
 
     this.reminder.date=new Date(this.reminder.date).setHours(this.reminder.hour);
     this.reminder.date=new Date(this.reminder.date).setMinutes(this.reminder.minute);
-    // this.reminder.date=new Date(this.reminder.date);
-    console.log("After update:::"+new Date(this.reminder.date));
-
-    let notification = {
-        id: new Date(this.reminder.date).getDay(),
-        title: 'Reminder!',
-        text: this.reminder.name,
-        at: this.reminder.date,
-        sound:'default'
-    };
-
-  this.notifications.push(notification);
-  console.log("Notifications to be scheduled: ", new Date(this.notifications[0].at));
-
-  this.localNotifications.cancelAll().then(() => {
- 
-    // Schedule the new notifications
-    this.localNotifications.schedule(this.notifications);
- 
-    this.notifications = [];
-
-    let alert = this.alertCtrl.create({
-        title: 'Notifications set',
-        buttons: ['Ok']
-    });
-
-    alert.present();  
-
-  });
-
-
-  
-    // alert(selectedTime);
-
-    // alert(new Date().getTime());
-
-    // console.log()
-    // alert(new Date().getTime()+10000);
-    // selectedTime.setDate(new Date().getTime()+10000);
-    // console.log(selectedTime);
-    // this.reminder.createDate=new Date();
-    // this.loader=true;
-    // this.db.list('/reminders').push(this.reminder).then(({key}) => 
-    // {
-    //   this.reminder.key=key;
-    //   this.updateKey()
-    // },error=>{
-    //   this.loader=false;
-    //   this.service.showToast2("Something went wrong please try again");
-    //   // this.service.showToast2("Something went wrong please try again");
-    // })
+    this.db.list('/reminders').push(this.reminder).then(({key}) => 
+    {
+      this.reminder.key=key;
+      this.updateKey()
+    },error=>{
+      this.loader=false;
+      this.service.showToast2("Something went wrong please try again");
+      // this.service.showToast2("Something went wrong please try again");
+    })
   }
+  
+ 
   updateKey()
   {
       this.db.object('/reminders/'+this.reminder.key).update(this.reminder).then((profile: any) =>{
             
-            this.loader=false;
+            
 
             this.setNotification();
-            this.closeModal();
+            
             console.log("Successfully updated reminders====");
         })
       .catch((err: any) => {
@@ -188,16 +168,41 @@ export class ManageRemindersPage {
   setNotification()
   {
 
+   
+    // this.reminder.date=new Date(this.reminder.date);
+    console.log("After update:::"+new Date(this.reminder.date));
 
-      var notifyTime=new Date(this.reminder.date).getTime();
-      let notification = {
-        id:1,
-        title: 'Reminder!',
-        text:this.reminder.name,
-        // at:
-      };
+    // let notification = {
+    //     id: new Date(this.reminder.date).getDay(),
+    //     title: 'Reminder!',
+    //     text: this.reminder.name,
+    //     at: this.reminder.date
+    //     // sound:'file://assets/sounds/sounds.ogg'
+    // };
+    // this.remindersList.forEach(element => {
 
-      this.notifications.push(notification);
+    //   alert(element);
+    //   console.log(element);
+    //  });
+    
+    for(var i=0;i<this.remindersList.length;i++)
+    {
+      this.notifications.push(this.remindersList[i]);
+    }
+    
+                                                                     
+      this.localNotifications.cancelAll().then(() => {
+                   this.loader=false;         
+                   this.localNotifications.schedule(this.notifications);
+                   this.notifications=[];
+                   var message="You have set Reminder";
+                   this.closeModal();
+               });
+      
+      
+      
+      // this.service.showToast(message);
+      
   }
 
   updateReminderInfo()
