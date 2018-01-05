@@ -18,6 +18,8 @@ import { UsersPage } from '../pages/users/users';
 import { BudgetsPage} from '../pages/budgets/budgets';
 import { FunctionsPage} from '../pages/functions/functions';
 import { RemindersPage} from '../pages/reminders/reminders';
+import { EventsPage} from '../pages/events/events';
+import { Places} from '../pages/events/events';
 
 // import { FirebaseAuth } from '@firebase/auth-types';
 // import { FirebaseDatabase } from '@firebase/database-types';
@@ -31,13 +33,13 @@ import { RemindersPage} from '../pages/reminders/reminders';
 export class MyApp {
   @ViewChild(Nav) nav: Nav;
   @ViewChild(NavController) navCtrl: NavController;
-  rootPage: any=LoginPage;
+  rootPage: any=EventsPage;
   headers:any;
   pages: Array<{title: string, component: any}>;
 
   constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen,public service:SessionService,public native:NativeStorage,public sharing:SocialSharing,public alertCtrl:AlertController  
     ,public nativeStorage:NativeStorage,public network:Network,public localNotifications:LocalNotifications,public http:Http) {
-      this.initializeApp();
+      // this.initializeApp();
     // this.enableLocation();  
     // this.rootPage=RemindersPage;
     // used for an example of ngFor and navigation

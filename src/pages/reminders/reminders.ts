@@ -71,7 +71,8 @@ export class ManageRemindersPage {
   // myDate:any=new Date();
   // tzoffset:any = (new Date()).getTimezoneOffset() * 60000; //offset in milliseconds
   
-  constructor(public platform: Platform,public alertCtrl:AlertController,public localNotifications:LocalNotifications,public viewCtrl:ViewController,public db: AngularFireDatabase,public service:SessionService,public navCtrl: NavController, public navParams: NavParams) {
+  constructor(public platform: Platform,public alertCtrl:AlertController,public localNotifications:
+    LocalNotifications,public viewCtrl:ViewController,public db: AngularFireDatabase,public service:SessionService,public navCtrl: NavController, public navParams: NavParams) {
 
     this.db.list('/reminders', { preserveSnapshot: true})
     .subscribe(snapshots=>{

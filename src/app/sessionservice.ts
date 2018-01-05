@@ -25,6 +25,7 @@ export class SessionService {
     function:any;
     reminder:any;
     text:any;
+    event:any;
     constructor(public db: AngularFireDatabase,public http:Http,public events:Events,public toastCtrl:ToastController,public nativeStorage:NativeStorage,public toast:Toast){
     }
 
@@ -192,6 +193,16 @@ export class SessionService {
     getFunction()
     {
      return this.function;
+    }
+
+    setEvent(eventInfo)
+    {
+      this.event=eventInfo;
+    }
+
+    getEvent()
+    {
+     return this.event;
     }
 
 

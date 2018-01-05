@@ -18,6 +18,10 @@ import { UsersPage} from '../pages/users/users';
 import { profile} from '../pages/profile/profile';
 import { UserDetailPage} from '../pages/user-detail/user-detail';
 import { RegisterUser } from '../pages/Login/Login';
+import { EventsPage} from '../pages/events/events';
+import { Places} from '../pages/events/events';
+
+import { ManageEventsPage} from '../pages/events/events';
 import { SocialSharing } from '@ionic-native/social-sharing';
 import { Network } from '@ionic-native/network';
 import { Camera, CameraOptions } from '@ionic-native/camera';
@@ -37,6 +41,9 @@ import { Base64 } from '@ionic-native/base64';
 import { AuthService } from './auth.service';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { Facebook } from '@ionic-native/facebook';
+import { LocationTrackerProvider } from '../providers/location-tracker';
+import { BackgroundGeolocation } from '@ionic-native/background-geolocation';
+import { Geolocation, Geoposition } from '@ionic-native/geolocation';
 
 // class imagePickerMock extends ImagePicker {
 //   getPictures(options) {
@@ -77,7 +84,10 @@ import { Facebook } from '@ionic-native/facebook';
     ManageFunctionsPage,
     RemindersPage,
     ManageRemindersPage,
-    SharePhotoPage
+    SharePhotoPage,
+    EventsPage,
+    ManageEventsPage,
+    Places
   ],
   imports: [
     HttpModule,
@@ -102,7 +112,10 @@ import { Facebook } from '@ionic-native/facebook';
     ManageFunctionsPage,
     RemindersPage,
     ManageRemindersPage,
-    SharePhotoPage
+    SharePhotoPage,
+    EventsPage,
+    ManageEventsPage,
+    Places
   ],
   providers: [
     StatusBar,
@@ -120,6 +133,9 @@ import { Facebook } from '@ionic-native/facebook';
     AuthService,
     AngularFireAuth,
     Facebook,
+    LocationTrackerProvider,
+    BackgroundGeolocation,
+    Geolocation,
     // { provide: ImagePicker, useClass: imagePickerMock },
     // { provide: Base64, useClass: Base64Mock },
     {provide: ErrorHandler, useClass: IonicErrorHandler}
